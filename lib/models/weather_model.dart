@@ -14,6 +14,8 @@ class Weather {
   var humidity;
   var feels_like;
   var pressure;
+  var date;
+  var temp24Hour = [];
 
   Weather(
       {this.cityName,
@@ -28,7 +30,8 @@ class Weather {
       this.feels_like,
       this.pressure,
       this.lat,
-      this.long});
+      this.long,
+      this.date});
 
   Weather.fromJson(Map<String, dynamic> json) {
     cityName = json["name"];
@@ -54,5 +57,15 @@ class Weather {
             .toString()
             .replaceAll(".", " ")
             .split(' ')[1]));
+    date = DateFormat('EEEE').format(DateTime.parse(
+            DateTime.fromMillisecondsSinceEpoch(json["sys"]["sunrise"] * 1000,
+                    isUtc: true)
+                .toString())) +
+        '-' +
+        DateFormat('dd.MM.yy').format(DateTime.parse(
+            DateTime.fromMillisecondsSinceEpoch(json["sys"]["sunrise"] * 1000,
+                    isUtc: true)
+                .toString()
+                .split(' ')[0]));
   }
 }

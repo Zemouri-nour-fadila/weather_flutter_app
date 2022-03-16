@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Widget HourlyPrediction(String location, String degree, String icon) {
+Widget HourlyPrediction(List<dynamic> hourly) {
   return Container(
     height: 100,
     decoration: const BoxDecoration(
@@ -9,7 +9,7 @@ Widget HourlyPrediction(String location, String degree, String icon) {
             bottom: BorderSide(color: Colors.white))),
     child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: 7,
+        itemCount: hourly.length,
         itemBuilder: (context, index) {
           return Container(
             width: 80,
@@ -23,13 +23,15 @@ Widget HourlyPrediction(String location, String degree, String icon) {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(location, style: const TextStyle(fontSize: 10.6)),
+                  Text(hourly[index].hour,
+                      style: const TextStyle(fontSize: 10.6)),
                   const SizedBox(
                     height: 5,
                   ),
-                  Image.network("http://openweathermap.org/img/w/$icon.png"),
-                  Text(degree + '°', style: const TextStyle(fontSize: 10.6))
-                  //Text(icon + '°', style: const TextStyle(fontSize: 10.6)),
+                  Image.network(
+                      "http://openweathermap.org/img/w/${hourly[index].icon}.png"),
+                  Text('${hourly[index].degree}' + '°',
+                      style: const TextStyle(fontSize: 10.6))
                 ],
               )),
             ),

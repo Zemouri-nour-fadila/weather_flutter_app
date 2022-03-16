@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:weather_flutter_app/Db/database.dart';
+import 'package:weather_flutter_app/models/weather_model.dart';
+import 'package:weather_flutter_app/services/shared_preferences_service.dart';
+import '../services/weather_api_client.dart';
 
 class DetailPage extends StatefulWidget {
   const DetailPage({Key? key}) : super(key: key);
@@ -8,10 +12,16 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPageState extends State<DetailPage> {
+  late Weather? _response = null;
+
   @override
   void initState() {
     super.initState();
   }
+
+  SharedPreferencesService prefs = SharedPreferencesService();
+  late final cityName;
+  late final isPined;
 
   final List<int> _items = List<int>.generate(50, (int index) => index);
 
@@ -30,7 +40,7 @@ class _DetailPageState extends State<DetailPage> {
             "Location",
             style: TextStyle(
               color: Colors.black,
-              fontSize: 40,
+              fontSize: 30,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -38,9 +48,12 @@ class _DetailPageState extends State<DetailPage> {
             CircleAvatar(
               radius: 20,
               backgroundColor: const Color.fromARGB(255, 248, 248, 255),
+              foregroundColor: Colors.black,
               child: IconButton(
                   color: Colors.black,
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/Search');
+                  },
                   icon: const Icon(
                     IconData(0xe047, fontFamily: 'MaterialIcons'),
                     size: 25,
@@ -53,13 +66,36 @@ class _DetailPageState extends State<DetailPage> {
         padding: const EdgeInsets.symmetric(horizontal: 10),
         children: <Widget>[
           for (int index = 0; index < _items.length; index += 1)
-            Card(
-              key: Key('$index'),
-              elevation: 10,
-              //tileColor: _items[index].isOdd? Color(Colors.blue): Color(Colors.lightBlue),
-              color: const Color.fromARGB(255, 248, 248, 255),
-              child: Text('Item ${_items[index]}'),
-            ),
+            if (_response != null)
+              Card(
+                key: Key('$index'),
+                elevation: 10,
+                color: const Color.fromARGB(255, 248, 248, 255),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: ListTile(
+                        leading: Image.network(
+                            "http://openweathermap.org/img/w/${_response!.icon}.png"),
+                        trailing: Text(
+                          '${_response!.degree}',
+                          style: const TextStyle(fontSize: 30.0),
+                        ),
+                        title: Text('${_response!.cityName}',
+                            style: const TextStyle(color: Colors.black)),
+                        subtitle: Text('${_response!.cityName}',
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            )),
+                        onTap: (() async {}),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
         ],
         onReorder: (int oldIndex, int newIndex) {
           setState(() {
@@ -72,5 +108,15 @@ class _DetailPageState extends State<DetailPage> {
         },
       ),
     );
+  }
+
+  void getCityname() async {
+    WeatherApiClient client = WeatherApiClient();
+    Weather? data;
+    String? name = await prefs.getCityName();
+    final response = await client.getCurrentWeather(name!);
+    setState(() {
+      _response = response;
+    });
   }
 }

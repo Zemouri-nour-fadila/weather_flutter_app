@@ -18,7 +18,11 @@ Widget aditionalInfo(String sunrise, String sunset, String feels_like,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(sunrise),
-                const Text("sunrise"),
+                const Text("sunrise",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    )),
               ],
             ),
             Column(
@@ -26,7 +30,11 @@ Widget aditionalInfo(String sunrise, String sunset, String feels_like,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(sunset),
-                const Text("sunset"),
+                const Text("sunset",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    )),
               ],
             ),
             Column(
@@ -34,7 +42,11 @@ Widget aditionalInfo(String sunrise, String sunset, String feels_like,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(feels_like + "°"),
-                const Text("Feels Like"),
+                const Text("Feels Like",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    )),
               ],
             ),
           ],
@@ -55,7 +67,11 @@ Widget aditionalInfo(String sunrise, String sunset, String feels_like,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text("s " + wind + " mps"),
-                const Text("wind"),
+                const Text("wind",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    )),
               ],
             ),
             Column(
@@ -63,7 +79,11 @@ Widget aditionalInfo(String sunrise, String sunset, String feels_like,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(humidity + "%"),
-                const Text("humidity"),
+                const Text("humidity",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    )),
               ],
             ),
             Column(
@@ -71,7 +91,11 @@ Widget aditionalInfo(String sunrise, String sunset, String feels_like,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(pressure),
-                const Text("pressure"),
+                const Text("pressure",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    )),
               ],
             ),
           ],
