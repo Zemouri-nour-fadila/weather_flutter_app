@@ -8,8 +8,8 @@ My first APP with Flutter. This project is a challenge by to aply what i've lear
 -	Search Feature : this freature helps you to search for a city then you can add it to your list of cities.
 
 ## API used.
-One Call API 1.0 : https://openweathermap.org/api/one-call-api#hist_parameter
-Hourly forecast : https://openweathermap.org/api/hourly-forecast#
+- One Call API 1.0 : https://openweathermap.org/api/one-call-api#hist_parameter
+- Hourly forecast : https://openweathermap.org/api/hourly-forecast#
 
 # Notes
 This project is not completed yet. The rest is coming soon!
