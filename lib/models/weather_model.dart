@@ -5,8 +5,8 @@ class Weather {
   var cityName;
   var lat;
   var long;
-  var temp; //main -> clouds
-  var degree; //temp
+  var temp;
+  var degree;
   var wind;
   var code;
   var sunrise;
@@ -15,7 +15,6 @@ class Weather {
   var feels_like;
   var pressure;
   var date;
-  var temp24Hour = [];
 
   Weather(
       {this.cityName,

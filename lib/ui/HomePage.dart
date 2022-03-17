@@ -21,8 +21,8 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
-  Future<void> getData() async {
-    data = await client.getCurrentWeather("london");
+  Future<void> getData(String location) async {
+    data = await client.getCurrentWeather(location);
   }
 
   Future<void> getData2() async {
@@ -65,7 +65,7 @@ class _HomePageState extends State<HomePage> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: FutureBuilder(
-          future: getData(),
+          future: getData("chicago"),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               return Padding(
@@ -79,10 +79,22 @@ class _HomePageState extends State<HomePage> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15.0),
                           ),
-                          color: const Color.fromARGB(255, 248, 248, 255),
                           elevation: 4,
-                          child: CurrentWeather('${data!.cityName}',
-                              '${data!.degree}', '${data!.temp}')),
+                          child: Container(
+                            decoration: const BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15)),
+                              gradient: LinearGradient(
+                                colors: [
+                                  Color.fromARGB(255, 67, 162, 240),
+                                  Color.fromARGB(255, 96, 161, 214),
+                                  Color.fromARGB(255, 19, 36, 49)
+                                ],
+                              ),
+                            ),
+                            child: CurrentWeather('${data!.cityName}',
+                                '${data!.degree}', '${data!.temp}'),
+                          )),
                     ),
                     const SizedBox(
                       height: 20.0,

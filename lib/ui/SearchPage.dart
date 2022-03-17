@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:weather_flutter_app/Db/database.dart';
 import 'package:weather_flutter_app/models/weather_model.dart';
+import 'package:weather_flutter_app/models/weathermodel.dart';
 import 'package:weather_flutter_app/services/shared_preferences_service.dart';
-
 import 'package:weather_flutter_app/services/weather_api_client.dart';
 import 'package:weather_flutter_app/ui/DetailPage.dart';
 
@@ -17,7 +17,7 @@ class _SearchPage extends State<SearchPage> {
   final TextEditingController cityController = TextEditingController();
   final client = WeatherApiClient();
   late Weather? _response = null;
-  late List<Weather> weathers = [];
+
   @override
   void initState() {
     super.initState();
@@ -53,66 +53,73 @@ class _SearchPage extends State<SearchPage> {
                   padding: const EdgeInsets.only(left: 10.0),
                   child: TextFormField(
                     controller: cityController,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
+                        suffixIcon: Column(
+                          children: [
+                            GestureDetector(
+                                child: const Icon(Icons.clear),
+                                onTap: () {
+                                  cityController.text = '';
+                                }),
+                            GestureDetector(
+                                child: const Icon(Icons.search),
+                                onTap: () {
+                                  getCityname();
+                                }),
+                          ],
+                        ),
                         labelText: 'Enter a city name',
                         hintText: 'Example: london'),
                   ),
                 ))
               ]),
             ),
-            TextButton(
-              child: Container(
-                color: Colors.blue,
-                padding:
-                    const EdgeInsets.symmetric(vertical: 5.0, horizontal: 20.0),
-                child: const Text('Get Response',
-                    style: TextStyle(color: Colors.white, fontSize: 20)),
-              ),
-              onPressed: getCityname,
-            ),
             if (_response != null)
-              Column(
-                children: [
-                  Card(
-                    elevation: 10,
-                    color: const Color.fromARGB(255, 248, 248, 255),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ListTile(
-                            leading: Image.network(
-                                "http://openweathermap.org/img/w/${_response!.icon}.png"),
-                            trailing: Text(
-                              '${_response!.degree}°',
-                              style: const TextStyle(fontSize: 30.0),
+              Padding(
+                padding: const EdgeInsets.only(top: 30.0),
+                child: Column(
+                  children: [
+                    Card(
+                      elevation: 10,
+                      color: const Color.fromARGB(255, 248, 248, 255),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ListTile(
+                              leading: Image.network(
+                                  "http://openweathermap.org/img/w/${_response!.icon}.png"),
+                              trailing: Text(
+                                '${_response!.degree}°',
+                                style: const TextStyle(fontSize: 30.0),
+                              ),
+                              title: Text('${_response!.cityName}',
+                                  style: const TextStyle(color: Colors.black)),
+                              subtitle: Text('${_response!.cityName}',
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                              onTap: (() async {
+                                SharedPreferencesService prefs =
+                                    SharedPreferencesService();
+                                await prefs.saveData(_response!.cityName, 0);
+                                databaseWeather db = databaseWeather();
+                                await db.createWeather(Weathermodel(
+                                    cityName: _response!.cityName,
+                                    isPined: false));
+                                await Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                        builder: (context) => DetailPage()));
+                              }),
                             ),
-                            title: Text('${_response!.cityName}',
-                                style: const TextStyle(color: Colors.black)),
-                            subtitle: Text('${_response!.cityName}',
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                )),
-                            onTap: (() async {
-                              SharedPreferencesService prefs =
-                                  SharedPreferencesService();
-                              await prefs.saveData(_response!.cityName, 0);
-                              print(weathers);
-                              databaseWeather weather = databaseWeather();
-                              weather.createWeather(_response!.cityName, false);
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => DetailPage()));
-                            }),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               )
           ],
         ));
@@ -122,7 +129,6 @@ class _SearchPage extends State<SearchPage> {
     final response = await client.getCurrentWeather(cityController.text);
     setState(() {
       _response = response;
-      weathers.add(_response!);
     });
   }
 }
